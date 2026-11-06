@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "feedanimals:block/training_bar" }
+  }
+}
