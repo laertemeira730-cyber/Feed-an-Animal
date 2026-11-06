@@ -28,7 +28,8 @@ public final class PhaseNetwork {
         }
 
         public static void handle(SetPhaseCountPacket packet,
-                                  net.minecraftforge.network.NetworkEvent.Context context) {
+                java.util.function.Supplier<net.minecraftforge.network.NetworkEvent.Context> contextSupplier) {
+            var context = contextSupplier.get();
             context.enqueueWork(() -> {
                 var player = context.getSender();
                 if (player == null) return;
