@@ -17,6 +17,7 @@ public final class ModCreativeTabs {
                     .title(Component.translatable("itemGroup.feedanimals.main"))
                     .icon(() -> new ItemStack(ModItems.TRAINING_BAR.get()))
                     .displayItems((parameters, output) -> {
+                        output.accept(ModItems.MANAGEMENT_MENU.get());
                         output.accept(ModItems.TRAINING_BAR.get());
                         output.accept(ModItems.PEN_MARKER.get());
                         output.accept(ModItems.SALES_MARKER.get());

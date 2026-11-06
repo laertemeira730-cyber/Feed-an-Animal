@@ -4,5 +4,6 @@
   "block.feedanimals.sales_marker": "Sales Marker",
   "block.feedanimals.phase_marker": "Phase Marker",
   "item.feedanimals.phase_marker": "Phase Marker",
+  "item.feedanimals.management_menu": "Management Menu",
   "itemGroup.feedanimals.main": "Feed an Animal"
 }

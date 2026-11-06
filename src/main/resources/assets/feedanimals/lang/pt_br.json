@@ -4,5 +4,6 @@
   "block.feedanimals.sales_marker": "Delimitador de Vendas",
   "block.feedanimals.phase_marker": "Delimitador de Fases",
   "item.feedanimals.phase_marker": "Delimitador de Fases",
+  "item.feedanimals.management_menu": "Painel de Gerenciamento",
   "itemGroup.feedanimals.main": "Lançar Comidas para Animais"
 }
