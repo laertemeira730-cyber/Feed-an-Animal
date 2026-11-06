@@ -1,5 +1,8 @@
 {
   "block.feedanimals.training_bar": "Training Bar",
   "block.feedanimals.pen_marker": "Pen Marker",
-  "block.feedanimals.sales_marker": "Sales Marker"
+  "block.feedanimals.sales_marker": "Sales Marker",
+  "block.feedanimals.phase_marker": "Phase Marker",
+  "item.feedanimals.phase_marker": "Phase Marker",
+  "itemGroup.feedanimals.main": "Feed an Animal"
 }

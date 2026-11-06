@@ -20,8 +20,8 @@ public final class ModCreativeTabs {
                         output.accept(ModItems.TRAINING_BAR.get());
                         output.accept(ModItems.PEN_MARKER.get());
                         output.accept(ModItems.SALES_MARKER.get());
-                    })
-                    .build());
+                        output.accept(ModItems.PHASE_MARKER.get());
+                    }).build());
 
     private ModCreativeTabs() {}
 }

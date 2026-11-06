@@ -1,9 +1,11 @@
 package com.feedanimals.mod;
 
+import com.feedanimals.mod.network.PhaseNetwork;
 import com.feedanimals.mod.registry.ModBlockEntities;
 import com.feedanimals.mod.registry.ModBlocks;
 import com.feedanimals.mod.registry.ModItems;
 import com.feedanimals.mod.registry.ModCreativeTabs;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -18,5 +20,10 @@ public class FeedAnimalsMod {
         ModItems.ITEMS.register(modBus);
         ModBlockEntities.BLOCK_ENTITIES.register(modBus);
         ModCreativeTabs.TABS.register(modBus);
+        PhaseNetwork.register();
+    }
+
+    public static ResourceLocation id(String path) {
+        return new ResourceLocation(MOD_ID, path);
     }
 }

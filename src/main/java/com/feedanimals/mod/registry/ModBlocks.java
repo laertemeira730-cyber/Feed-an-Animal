@@ -2,6 +2,7 @@ package com.feedanimals.mod.registry;
 
 import com.feedanimals.mod.FeedAnimalsMod;
 import com.feedanimals.mod.block.AreaMarkerBlock;
+import com.feedanimals.mod.block.PhaseMarkerBlock;
 import com.feedanimals.mod.block.TrainingBarBlock;
 import com.feedanimals.mod.data.AreaSavedData.AreaType;
 import net.minecraft.world.level.block.Block;
@@ -18,24 +19,20 @@ public final class ModBlocks {
 
     public static final RegistryObject<Block> TRAINING_BAR = BLOCKS.register("training_bar",
             () -> new TrainingBarBlock(BlockBehaviour.Properties.of()
-                    .mapColor(MapColor.WOOD)
-                    .strength(2.0F)
-                    .sound(SoundType.WOOD)
-                    .noOcclusion()));
+                    .mapColor(MapColor.WOOD).strength(2.0F).sound(SoundType.WOOD).noOcclusion()));
 
     public static final RegistryObject<Block> PEN_MARKER = BLOCKS.register("pen_marker",
             () -> new AreaMarkerBlock(AreaType.PEN, BlockBehaviour.Properties.of()
-                    .mapColor(MapColor.COLOR_LIGHT_GREEN)
-                    .strength(1.5F)
-                    .sound(SoundType.STONE)
-                    .noOcclusion()));
+                    .mapColor(MapColor.COLOR_LIGHT_GREEN).strength(1.5F).sound(SoundType.STONE).noOcclusion()));
 
     public static final RegistryObject<Block> SALES_MARKER = BLOCKS.register("sales_marker",
             () -> new AreaMarkerBlock(AreaType.SALES, BlockBehaviour.Properties.of()
-                    .mapColor(MapColor.COLOR_YELLOW)
-                    .strength(1.5F)
-                    .sound(SoundType.STONE)
-                    .noOcclusion()));
+                    .mapColor(MapColor.COLOR_YELLOW).strength(1.5F).sound(SoundType.STONE).noOcclusion()));
+
+    public static final RegistryObject<Block> PHASE_MARKER = BLOCKS.register("phase_marker",
+            () -> new PhaseMarkerBlock(BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.COLOR_PURPLE).strength(1.0F).sound(SoundType.STONE)
+                    .noOcclusion().noCollission()));
 
     private ModBlocks() {}
 }
