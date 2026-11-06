@@ -6,13 +6,15 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class AreaMarkerBlock extends Block {
@@ -29,8 +31,21 @@ public class AreaMarkerBlock extends Block {
         this.areaType = areaType;
     }
 
+    /** O marcador não aparece no mundo, mas continua tendo uma área de seleção. */
     @Override
-    public VoxelShape getShape(BlockState state, net.minecraft.world.level.BlockGetter level,
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.INVISIBLE;
+    }
+
+    /** Permite que jogadores e animais atravessem o marcador. */
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter level,
+                                        BlockPos pos, CollisionContext context) {
+        return Shapes.empty();
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, BlockGetter level,
                                BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
