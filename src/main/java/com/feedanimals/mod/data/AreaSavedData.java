@@ -15,12 +15,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-/** Guarda uma área de cercado e uma área de vendas para cada jogador, por dimensão. */
+/** Persiste uma área de cercado e uma área de vendas por jogador e dimensão. */
 public class AreaSavedData extends SavedData {
     private static final String DATA_NAME = "feedanimals_areas";
 
     public enum AreaType {
-        PEN("cercado"), SALES("vendas");
+        PEN("cercado"),
+        SALES("vendas");
 
         private final String displayName;
 
@@ -36,32 +37,39 @@ public class AreaSavedData extends SavedData {
     private final Map<String, CornerSelection> pendingCorners = new HashMap<>();
     private final Map<String, DefinedArea> definedAreas = new HashMap<>();
 
-    public static AreaSavedData get(ServerLevel currentLevel) {
-        MinecraftServer server = currentLevel.getServer();
+    public static AreaSavedData get(ServerLevel level) {
+        MinecraftServer server = level.getServer();
         return server.overworld().getDataStorage().computeIfAbsent(
-                AreaSavedData::load, AreaSavedData::new, DATA_NAME);
+                AreaSavedData::load,
+                AreaSavedData::new,
+                DATA_NAME
+        );
     }
 
     public void selectCorner(ServerLevel level, ServerPlayer player, AreaType type, BlockPos clickedPos) {
         String dimensionId = level.dimension().location().toString();
         String key = makeKey(player.getUUID(), type, dimensionId);
         CornerSelection pending = pendingCorners.get(key);
+        BlockPos clicked = clickedPos.immutable();
 
         if (pending == null || !pending.dimensionId().equals(dimensionId)) {
-            pendingCorners.put(key, new CornerSelection(clickedPos.immutable(), dimensionId));
+            pendingCorners.put(key, new CornerSelection(clicked, dimensionId));
             setDirty();
-            player.sendSystemMessage(Component.literal("Primeiro canto do " + type.displayName()
-                    + " definido em " + format(clickedPos) + ". Clique no bloco do canto oposto."));
+            player.sendSystemMessage(Component.literal(
+                    "Primeiro canto do " + type.displayName() + " definido em " + format(clicked)
+                            + ". Clique no bloco do canto oposto."
+            ));
             return;
         }
 
-        if (pending.pos().equals(clickedPos)) {
+        if (pending.pos().equals(clicked)) {
             player.sendSystemMessage(Component.literal("Escolha outro bloco para marcar o canto oposto."));
             return;
         }
 
-        DefinedArea area = new DefinedArea(player.getUUID().toString(), type,
-                pending.pos(), clickedPos.immutable(), dimensionId);
+        DefinedArea area = new DefinedArea(
+                player.getUUID().toString(), type, pending.pos(), clicked, dimensionId
+        );
         definedAreas.put(key, area);
         pendingCorners.remove(key);
         setDirty();
@@ -71,9 +79,11 @@ public class AreaSavedData extends SavedData {
         long volume = ((long) max.getX() - min.getX() + 1L)
                 * ((long) max.getY() - min.getY() + 1L)
                 * ((long) max.getZ() - min.getZ() + 1L);
-        player.sendSystemMessage(Component.literal("Área de " + type.displayName()
-                + " definida! De " + format(min) + " até " + format(max)
-                + " (" + volume + " blocos)."));
+
+        player.sendSystemMessage(Component.literal(
+                "Área de " + type.displayName() + " definida! De " + format(min)
+                        + " até " + format(max) + " (" + volume + " blocos)."
+        ));
     }
 
     public DefinedArea getArea(UUID owner, AreaType type, String dimensionId) {
@@ -116,13 +126,18 @@ public class AreaSavedData extends SavedData {
     }
 
     public static AreaSavedData load(CompoundTag tag) {
-        AreaSavedData data = new AreaSaveddata();
+        AreaSavedData data = new AreaSavedData();
 
         ListTag pendingList = tag.getList("PendingCorners", Tag.TAG_COMPOUND);
         for (int i = 0; i < pendingList.size(); i++) {
             CompoundTag entry = pendingList.getCompound(i);
-            data.pendingCorners.put(entry.getString("Key"), new CornerSelection(
-                    NbtUtils.readBlockPos(entry.getCompound("Pos")), entry.getString("Dimension")));
+            data.pendingCorners.put(
+                    entry.getString("Key"),
+                    new CornerSelection(
+                            NbtUtils.readBlockPos(entry.getCompound("Pos")),
+                            entry.getString("Dimension")
+                    )
+            );
         }
 
         ListTag areasList = tag.getList("DefinedAreas", Tag.TAG_COMPOUND);
@@ -130,10 +145,13 @@ public class AreaSavedData extends SavedData {
             CompoundTag entry = areasList.getCompound(i);
             try {
                 AreaType type = AreaType.valueOf(entry.getString("Type"));
-                DefinedArea area = new DefinedArea(entry.getString("Owner"), type,
+                DefinedArea area = new DefinedArea(
+                        entry.getString("Owner"),
+                        type,
                         NbtUtils.readBlockPos(entry.getCompound("First")),
                         NbtUtils.readBlockPos(entry.getCompound("Second")),
-                        entry.getString("Dimension"));
+                        entry.getString("Dimension")
+                );
                 data.definedAreas.put(entry.getString("Key"), area);
             } catch (IllegalArgumentException ignored) {
                 // Ignora registros de versões antigas ou corrompidos.
@@ -144,16 +162,27 @@ public class AreaSavedData extends SavedData {
 
     private record CornerSelection(BlockPos pos, String dimensionId) {}
 
-    public record DefinedArea(String ownerId, AreaType type, BlockPos first,
-                              BlockPos second, String dimensionId) {
+    public record DefinedArea(
+            String ownerId,
+            AreaType type,
+            BlockPos first,
+            BlockPos second,
+            String dimensionId
+    ) {
         public BlockPos min() {
-            return new BlockPos(Math.min(first.getX(), second.getX()),
-                    Math.min(first.getY(), second.getY()), Math.min(first.getZ(), second.getZ()));
+            return new BlockPos(
+                    Math.min(first.getX(), second.getX()),
+                    Math.min(first.getY(), second.getY()),
+                    Math.min(first.getZ(), second.getZ())
+            );
         }
 
         public BlockPos max() {
-            return new BlockPos(Math.max(first.getX(), second.getX()),
-                    Math.max(first.getY(), second.getY()), Math.max(first.getZ(), second.getZ()));
+            return new BlockPos(
+                    Math.max(first.getX(), second.getX()),
+                    Math.max(first.getY(), second.getY()),
+                    Math.max(first.getZ(), second.getZ())
+            );
         }
 
         public boolean contains(ServerLevel level, BlockPos pos) {

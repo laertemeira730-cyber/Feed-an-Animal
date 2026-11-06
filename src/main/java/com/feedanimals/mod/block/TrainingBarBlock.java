@@ -7,13 +7,14 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.state.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -21,7 +22,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class TrainingBarBlock extends Block implements EntityBlock {
-    private static final VoxelShape SHAPE = Shapes.on(
+    private static final VoxelShape SHAPE = Shapes.or(
             Block.box(2, 0, 6, 5, 13, 10),
             Block.box(11, 0, 6, 14, 13, 10),
             Block.box(4, 11, 7, 12, 14, 9)
@@ -32,8 +33,7 @@ public class TrainingBarBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, net.minecraft.world.level.BlockGetter level,
-                               BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
@@ -50,7 +50,7 @@ public class TrainingBarBlock extends Block implements EntityBlock {
             return InteractionResult.PASS;
         }
 
-        if (!level.isClientSide && player instanceof ServerPlayer) {
+        if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof TrainingBarBlockEntity trainingBar) {
                 trainingBar.train(serverPlayer);
@@ -62,9 +62,8 @@ public class TrainingBarBlock extends Block implements EntityBlock {
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
-                                                                 BlockEntityType<T> type) {
-        // A barra nao precisa de ticker: o treino acontece quando o jogador interage.
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(
+            Level level, BlockState state, BlockEntityType<T> type) {
         return null;
     }
 }
