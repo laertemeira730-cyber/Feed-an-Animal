@@ -1,5 +1,6 @@
 package com.feedanimals.mod.block;
 
+import com.feedanimals.mod.client.SystemMenuScreen;
 import com.feedanimals.mod.data.AreaSavedData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -15,7 +16,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.Nullable;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 
 public class AreaMarkerBlock extends Block {
     private static final VoxelShape SHAPE = Shapes.or(
@@ -31,13 +33,11 @@ public class AreaMarkerBlock extends Block {
         this.areaType = areaType;
     }
 
-    /** O marcador não aparece no mundo, mas continua tendo uma área de seleção. */
     @Override
     public RenderShape getRenderShape(BlockState state) {
         return RenderShape.INVISIBLE;
     }
 
-    /** Permite que jogadores e animais atravessem o marcador. */
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter level,
                                         BlockPos pos, CollisionContext context) {
@@ -53,8 +53,15 @@ public class AreaMarkerBlock extends Block {
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player,
                                  InteractionHand hand, BlockHitResult hit) {
-        if (hand != InteractionHand.MAIN_HAND) {
-            return InteractionResult.PASS;
+        if (hand != InteractionHand.MAIN_HAND) return InteractionResult.PASS;
+
+        if (player.isCrouching()) {
+            if (level.isClientSide) {
+                DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
+                        SystemMenuScreen.open(areaType == AreaSavedData.AreaType.PEN
+                                ? SystemMenuScreen.MenuType.PEN : SystemMenuScreen.MenuType.SALES));
+            }
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
 
         if (!level.isClientSide && player instanceof ServerPlayer serverPlayer

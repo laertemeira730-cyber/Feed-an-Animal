@@ -1,5 +1,6 @@
 package com.feedanimals.mod;
 
+import com.feedanimals.mod.network.GameNetwork;
 import com.feedanimals.mod.network.PhaseNetwork;
 import com.feedanimals.mod.registry.ModBlockEntities;
 import com.feedanimals.mod.registry.ModBlocks;
@@ -21,6 +22,7 @@ public class FeedAnimalsMod {
         ModBlockEntities.BLOCK_ENTITIES.register(modBus);
         ModCreativeTabs.TABS.register(modBus);
         PhaseNetwork.register();
+        GameNetwork.register();
     }
 
     public static ResourceLocation id(String path) {

@@ -1,42 +1,48 @@
-# Lançar Comidas para Animais — Etapa 1
+# Lançar Comidas para Animais — Base integrada
 
-Base inicial para Minecraft Java 1.20.1 + Minecraft Forge 47.4.28 (Java 17).
+Mod para Minecraft Java 1.20.1 + Minecraft Forge 47.4.28 (Java 17), inspirado na experiência Roblox Throw Food For Animals.
 
-## O que já está implementado
+## Sistemas incluídos nesta base
 
-- **Barra de Treinamento**: bloco com `BlockEntity`. Ao clicar com o botão direito, concede +1 de força de arremesso, com intervalo de 1 segundo. A força está limitada provisoriamente a 100 e é salva nos dados persistentes do jogador, inclusive após a morte.
-- **Delimitador de Cercado**: clique com o botão direito no primeiro bloco e depois no segundo bloco do canto oposto para criar o volume do cercado.
-- **Delimitador de Vendas**: usa o mesmo processo, mas grava uma área de vendas separada.
-- As áreas pertencem ao jogador, cada jogador pode ter uma área ativa de cada tipo em cada dimensão, e tudo fica salvo nos dados do mundo (`SavedData`).
-- Os três blocos aparecem na aba criativa própria do mod e têm modelos, traduções e loot tables básicos.
+- **Animais vanilla**: usa os próprios mobs e modelos do Minecraft. Ao lançar um alimento próximo de um animal, ele pode ser atraído e convertido em um registro de animal no inventário.
+- **Alimentos arremessáveis**: três categorias iniciais (básica, rara e premium), com alcances de atração diferentes e ícones baseados em texturas vanilla.
+- **Registros de animais**: use um registro dentro da área delimitada do cercado para trazer de volta o animal original.
+- **Cercado**: dois marcadores invisíveis definem os cantos opostos da área. Os animais dentro da área geram moedas periodicamente.
+- **Vendas**: dois marcadores invisíveis definem a área de vendas. O menu permite vender um ou todos os registros de animais guardados na mochila.
+- **Loja de alimentos**: use o item Loja de Alimentos para comprar os alimentos com o saldo do jogador.
+- **Treinamento**: clique com o botão direito na barra para abrir o menu e treinar manualmente. Use Ctrl + botão direito na barra para iniciar o treinamento automático; pressione Shift para parar.
+- **Fases**: configure a quantidade usando o item Delimitador de Fases, marque os dois extremos e acompanhe as fases na tela do marcador. Cada fase tem sua própria aba e conclusão persistente.
+- **Persistência**: saldo, força, áreas, projetos e fases concluídas são salvos por jogador/mundo.
 
-## Como marcar uma área
+## Como começar
 
-1. Coloque dois blocos do mesmo tipo nos cantos opostos da área.
-2. Clique com o botão direito no primeiro marcador.
-3. Clique com o botão direito no segundo marcador.
-4. O jogo confirma as coordenadas e o volume delimitado.
+Ao entrar pela primeira vez, o jogador recebe 8 alimentos básicos para testar o arremesso. O saldo inicial está centralizado em `EconomyRules.STARTING_MONEY` e permanece em zero nesta base enquanto o valor final de início não for definido.
 
-Cada jogador tem uma área ativa de cercado e uma área ativa de vendas por dimensão. Para redefinir uma área, basta clicar nos dois marcadores novamente, começando pelo primeiro canto.
+1. Coloque a Barra de Treinamento e clique nela para abrir o menu.
+2. Use a Loja de Alimentos para comprar alimentos quando tiver moedas.
+3. Lance alimentos perto dos animais. Quando um animal for atraído, seu registro irá para o inventário.
+4. Coloque dois Delimitadores de Cercado nos cantos opostos e clique com o botão direito em cada marcador para definir a área.
+5. Use o registro de animal em um bloco dentro do cercado para colocar o animal.
+6. Coloque dois Delimitadores de Vendas nos cantos opostos e marque a área. Abra o menu do delimitador com Shift + botão direito no marcador ou usando o item no ar para vender animais guardados na mochila.
 
-## Como obter os blocos rapidamente
+## Controles dos menus
+
+- **Barra de Treinamento**: botão direito abre o menu; Ctrl + botão direito inicia o treino automático; Shift interrompe.
+- **Delimitador de Cercado/Vendas**: usar o item no ar abre o menu; clique direito normal nos marcadores escolhe os cantos; Shift + clique direito no marcador abre o menu.
+- **Loja de Alimentos**: botão direito no item abre a loja.
+- **Delimitador de Fases**: botão direito no ar abre a configuração; clique no bloco marcador abre o painel das fases.
+- **Animais**: clique direito com a mão vazia ou item que não seja alimento abre as informações do mob. Comida do mod continua sendo arremessada.
+
+## Valores de balanceamento
+
+Os preços, alcance dos alimentos, renda do cercado e frequência de renda ficam centralizados em `EconomyRules`. São parâmetros iniciais para teste e podem ser ajustados sem espalhar valores pelo código.
+
+## Compilar
+
+Use JDK 17 e Gradle 8.1.1:
 
 ```text
-/give @p feedanimals:training_bar
-/give @p feedanimals:pen_marker 2
-/give @p feedanimals:sales_marker 2
+gradle build --no-daemon
 ```
 
-## Como testar
-
-Abra a pasta do projeto no IntelliJ IDEA ou Eclipse com suporte a Gradle, usando JDK 17.
-
-- `gradle runClient` — iniciar o cliente de desenvolvimento.
-- `gradle build` — compilar o mod; o JAR fica em `build/libs/`.
-
-## Observações desta etapa
-
-- O treino ainda usa um clique por sessão; a animação de exercício e o sistema de pressionar/segurar serão adicionados em etapa posterior.
-- A área é registrada e persistida, mas ainda não restringe a movimentação dos animais nem executa vendas. Isso será ligado aos sistemas de animais e economia na próxima etapa.
-- A força máxima e o ganho por treino são valores iniciais de teste, não valores definitivos do jogo Roblox.
-- Os marcadores usam modelos geométricos simples e texturas vanilla temporárias.
+O JAR fica em `build/libs/`. O workflow do GitHub Actions também compila automaticamente a cada push na branch `main`.

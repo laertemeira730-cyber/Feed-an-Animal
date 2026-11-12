@@ -4,6 +4,11 @@
   "block.feedanimals.sales_marker": "Delimitador de Vendas",
   "block.feedanimals.phase_marker": "Delimitador de Fases",
   "item.feedanimals.phase_marker": "Delimitador de Fases",
-  "item.feedanimals.management_menu": "Painel de Gerenciamento",
+  "item.feedanimals.management_menu": "Painel antigo",
+  "item.feedanimals.food_shop": "Loja de Alimentos",
+  "item.feedanimals.feed_basic": "Comida Básica",
+  "item.feedanimals.feed_rare": "Comida Rara",
+  "item.feedanimals.feed_premium": "Comida Premium",
+  "item.feedanimals.animal_token": "Registro de Animal",
   "itemGroup.feedanimals.main": "Lançar Comidas para Animais"
 }

@@ -4,6 +4,11 @@
   "block.feedanimals.sales_marker": "Sales Marker",
   "block.feedanimals.phase_marker": "Phase Marker",
   "item.feedanimals.phase_marker": "Phase Marker",
-  "item.feedanimals.management_menu": "Management Menu",
+  "item.feedanimals.management_menu": "Legacy menu",
+  "item.feedanimals.food_shop": "Food Shop",
+  "item.feedanimals.feed_basic": "Basic Food",
+  "item.feedanimals.feed_rare": "Rare Food",
+  "item.feedanimals.feed_premium": "Premium Food",
+  "item.feedanimals.animal_token": "Animal Record",
   "itemGroup.feedanimals.main": "Feed an Animal"
 }

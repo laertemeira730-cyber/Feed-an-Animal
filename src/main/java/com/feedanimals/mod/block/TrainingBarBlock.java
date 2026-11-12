@@ -1,9 +1,9 @@
 package com.feedanimals.mod.block;
 
 import com.feedanimals.mod.block.entity.TrainingBarBlockEntity;
+import com.feedanimals.mod.client.SystemMenuScreen;
 import com.feedanimals.mod.registry.ModBlockEntities;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -19,6 +19,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import org.jetbrains.annotations.Nullable;
 
 public class TrainingBarBlock extends Block implements EntityBlock {
@@ -46,17 +48,11 @@ public class TrainingBarBlock extends Block implements EntityBlock {
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player,
                                  InteractionHand hand, BlockHitResult hit) {
-        if (hand != InteractionHand.MAIN_HAND) {
-            return InteractionResult.PASS;
+        if (hand != InteractionHand.MAIN_HAND) return InteractionResult.PASS;
+        if (level.isClientSide) {
+            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
+                    SystemMenuScreen.open(SystemMenuScreen.MenuType.TRAINING, pos));
         }
-
-        if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
-            BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof TrainingBarBlockEntity trainingBar) {
-                trainingBar.train(serverPlayer);
-            }
-        }
-
         return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
